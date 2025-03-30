@@ -1,0 +1,23 @@
+{
+    "application": "gateway",
+    "profile": "local",
+    "http_port": 3000,
+    "grpc_port": 3000,
+    "grpc_timeout": 10000,
+    "grpc_max_header_size": 12288,
+    "grpc_latency_sla": 1,
+    "grpc_max_receive_msg_size": 10000000,
+    "redis_host": "localhost",
+    "redis_port": 6379,
+    "redis_min_conn": 2,
+    "redis_default_ttl_ms": 360000,
+    "domain_frontend": "http://localhost:4200",
+    "domain_backend": "http://localhost:3000",
+    "hcm_firebase_server_key": "",
+    "svm_firebase_server_key": "",
+    "context_path": "gatewayapp",
+    "limiter_max": 100,
+    "limiter_expiration": 30,
+    "auth_grpc_server": "localhost:3001",
+    "jwt_secret": "sasasasa"
+}

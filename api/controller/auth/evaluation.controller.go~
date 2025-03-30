@@ -1,0 +1,306 @@
+package authcontroller
+
+import (
+	account "gateway/grpc/client/account"
+	bpm "gateway/grpc/client/bpm"
+	investor "gateway/grpc/client/investor"
+	patool "gateway/grpc/client/patool"
+	visitor "gateway/grpc/client/visitor"
+
+	"github.com/gofiber/fiber/v2"
+
+	authmodel "gateway/api/model/auth"
+	apiutil "gateway/api/util"
+	authgrpcclient "gateway/grpc/client/auth"
+	offergrpcclient "gateway/grpc/client/offer"
+
+	grpcutil "gateway/grpc/util"
+	"gateway/proto/auth"
+	"gateway/proto/gcommon"
+)
+
+type EvaluationController struct {
+	*authgrpcclient.EvaluationGrpcClient
+	offerAuthGrpcClient    *offergrpcclient.AuthGrpcClient
+	accountAuthGrpcClient  *account.AuthGrpcClient
+	investorAuthGrpcClient *investor.AuthGrpcClient
+	bpmAuthGrpcClient      *bpm.AuthGrpcClient
+	visitorAuthGrpcClient  *visitor.AuthGrpcClient
+	patoolAuthGrpcClient   *patool.AuthGrpcClient
+
+}
+
+func NewEvaluationController(
+	evaluationGrpcClient *authgrpcclient.EvaluationGrpcClient,
+	offerAuthGrpcClient *offergrpcclient.AuthGrpcClient,
+	accountAuthGrpcClient *account.AuthGrpcClient,
+	investorAuthGrpcClient *investor.AuthGrpcClient,
+	bpmAuthGrpcClient *bpm.AuthGrpcClient,
+	visitorAuthGrpcClient *visitor.AuthGrpcClient,
+	patoolAuthGrpcClient *patool.AuthGrpcClient,
+) *EvaluationController {
+	return &EvaluationController{
+		EvaluationGrpcClient:   evaluationGrpcClient,
+		offerAuthGrpcClient:    offerAuthGrpcClient,
+		accountAuthGrpcClient:  accountAuthGrpcClient,
+		investorAuthGrpcClient: investorAuthGrpcClient,
+		bpmAuthGrpcClient:      bpmAuthGrpcClient,
+		visitorAuthGrpcClient:  visitorAuthGrpcClient,
+		patoolAuthGrpcClient:   patoolAuthGrpcClient,
+	}
+}
+
+// EvaluateRole
+// @Summary     Evaluate Role
+// @Description List all things a user with given role can do
+// @Tags        Authorization - Evaluation
+// @Param       _ body auth.EvaluateRoleRequest true "request body"
+// @Accept      json
+// @Produce     json
+// @Success     200             {object} authmodel.EvaluateSubjectResponse
+// @Failure     400,401,403,500 {object} basemodel.ApiError
+// @Router      /authz/evaluation/role [post]
+// @Security    JWT
+func (c *EvaluationController) EvaluateRole(ctx *fiber.Ctx) error {
+	md := grpcutil.WithModuleACLMetadata(ctx, gcommon.Module_MODULE_AUTH)
+
+	req := &auth.EvaluateRoleRequest{}
+
+	if err := ctx.BodyParser(req); err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	res, err := c.EvaluationGrpcClient.EvaluateRole(req, md)
+
+	if err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	if apiutil.HasGrpcError(res.Error) {
+		return apiutil.AsGrpcError(res.Error)
+	}
+
+	return apiutil.AsServerResponse(ctx, &authmodel.EvaluateSubjectResponse{
+		Code: apiutil.AsSuccessCode(),
+		Data: authmodel.SubjectEvaluations{
+			Items: res.Evaluations,
+		},
+	})
+}
+
+// EvaluateUser
+// @Summary     Evaluate User
+// @Description List all things a user can do
+// @Tags        Authorization - Evaluation
+// @Param       _ body auth.EvaluateUserRequest true "request body"
+// @Accept      json
+// @Produce     json
+// @Success     200             {object} authmodel.EvaluateSubjectResponse
+// @Failure     400,401,403,500 {object} basemodel.ApiError
+// @Router      /authz/evaluation/user [post]
+// @Security    JWT
+func (c *EvaluationController) EvaluateUser(ctx *fiber.Ctx) error {
+	md := grpcutil.WithModuleACLMetadata(ctx, gcommon.Module_MODULE_AUTH)
+
+	req := &auth.EvaluateUserRequest{}
+
+	if err := ctx.BodyParser(req); err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	res, err := c.EvaluationGrpcClient.EvaluateUser(req, md)
+
+	if err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	if apiutil.HasGrpcError(res.Error) {
+		return apiutil.AsGrpcError(res.Error)
+	}
+
+	if req.ObjectIds != nil {
+		module := req.Module
+		req := &gcommon.EvaluateUserRequest{
+			ObjectIds:   req.ObjectIds,
+			Evaluations: res.Evaluations,
+			UserId:      req.UserId,
+		}
+
+		return c.evaluateByService(ctx, req, module)
+	}
+
+	return apiutil.AsServerResponse(ctx, &authmodel.EvaluateSubjectResponse{
+		Code: apiutil.AsSuccessCode(),
+		Data: authmodel.SubjectEvaluations{
+			Items: res.Evaluations,
+		},
+	})
+}
+
+func (c *EvaluationController) evaluateByService(ctx *fiber.Ctx, req *gcommon.EvaluateUserRequest, module gcommon.Module) error {
+	md := grpcutil.WithModuleACLMetadata(ctx, module)
+	var res *gcommon.EvaluateSubjectResponse
+	var err error
+
+	switch module {
+	case gcommon.Module_MODULE_OFFER:
+		res, err = c.offerAuthGrpcClient.EvaluateUser(req, md)
+		break
+	case gcommon.Module_MODULE_ACCOUNT:
+		res, err = c.accountAuthGrpcClient.EvaluateUser(req, md)
+		break
+	case gcommon.Module_MODULE_INVESTOR:
+		res, err = c.investorAuthGrpcClient.EvaluateUser(req, md)
+		break
+	case gcommon.Module_MODULE_BPM:
+		res, err = c.bpmAuthGrpcClient.EvaluateUser(req, md)
+		break
+	case gcommon.Module_MODULE_VISITOR:
+		res, err = c.visitorAuthGrpcClient.EvaluateUser(req, md)
+		break
+	case gcommon.Module_MODULE_PA_TOOL:
+		res, err = c.patoolAuthGrpcClient.EvaluateUser(req, md)
+		break
+	default:
+		//do nothing
+	}
+
+	if err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	if apiutil.HasGrpcError(res.Error) {
+		return apiutil.AsGrpcError(res.Error)
+	}
+
+	return apiutil.AsServerResponse(ctx, &authmodel.EvaluateSubjectResponse{
+		Code: apiutil.AsSuccessCode(),
+		Data: authmodel.SubjectEvaluations{
+			Items: res.Evaluations,
+		},
+	})
+}
+
+// EvaluateGroup
+// @Summary     Evaluate Group
+// @Description List all things a user with given group can do
+// @Tags        Authorization - Evaluation
+// @Param       _ body auth.EvaluateGroupRequest true "request body"
+// @Accept      json
+// @Produce     json
+// @Success     200             {object} authmodel.EvaluateSubjectResponse
+// @Failure     400,401,403,500 {object} basemodel.ApiError
+// @Router      /authz/evaluation/group [post]
+// @Security    JWT
+func (c *EvaluationController) EvaluateGroup(ctx *fiber.Ctx) error {
+	md := grpcutil.WithModuleACLMetadata(ctx, gcommon.Module_MODULE_AUTH)
+
+	req := &auth.EvaluateGroupRequest{}
+
+	if err := ctx.BodyParser(req); err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	res, err := c.EvaluationGrpcClient.EvaluateGroup(req, md)
+
+	if err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	if apiutil.HasGrpcError(res.Error) {
+		return apiutil.AsGrpcError(res.Error)
+	}
+
+	return apiutil.AsServerResponse(ctx, &authmodel.EvaluateSubjectResponse{
+		Code: apiutil.AsSuccessCode(),
+		Data: authmodel.SubjectEvaluations{
+			Items: res.Evaluations,
+		},
+	})
+}
+
+// EvaluateOrgUnit
+// @Summary     Evaluate OrgUnit
+// @Description List all things a user can do
+// @Tags        Authorization - Evaluation
+// @Param       _ body auth.EvaluateOrgUnitRequest true "request body"
+// @Accept      json
+// @Produce     json
+// @Success     200             {object} authmodel.EvaluateSubjectResponse
+// @Failure     400,401,403,500 {object} basemodel.ApiError
+// @Router      /authz/evaluation/org [post]
+// @Security    JWT
+func (c *EvaluationController) EvaluateOrgUnit(ctx *fiber.Ctx) error {
+	md := grpcutil.WithModuleACLMetadata(ctx, gcommon.Module_MODULE_AUTH)
+
+	req := &auth.EvaluateOrgUnitRequest{}
+
+	if err := ctx.BodyParser(req); err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	res, err := c.EvaluationGrpcClient.EvaluateOrgUnit(req, md)
+
+	if err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	if apiutil.HasGrpcError(res.Error) {
+		return apiutil.AsGrpcError(res.Error)
+	}
+
+	return apiutil.AsServerResponse(ctx, &authmodel.EvaluateSubjectResponse{
+		Code: apiutil.AsSuccessCode(),
+		Data: authmodel.SubjectEvaluations{
+			Items: res.Evaluations,
+		},
+	})
+}
+
+// EvaluateResource
+// @Summary     Evaluate Resource
+// @Description List all things a user can do
+// @Tags        Authorization - Evaluation
+// @Param       _ body authmodel.EvaluateResourceRequest true "request body"
+// @Accept      json
+// @Produce     json
+// @Success     200             {object} authmodel.EvaluateResourceResponse
+// @Failure     400,401,403,500 {object} basemodel.ApiError
+// @Router      /authz/evaluation/resource [post]
+// @Security    JWT
+func (c *EvaluationController) EvaluateResource(ctx *fiber.Ctx) error {
+	md := grpcutil.WithModuleACLMetadata(ctx, gcommon.Module_MODULE_AUTH)
+
+	req := &authmodel.EvaluateResourceRequest{}
+
+	if err := ctx.BodyParser(req); err != nil {
+		return apiutil.AsApiError(err)
+	}
+	grpcReq := &auth.EvaluateResourceRequest{
+		ActionNames: req.ActionNames,
+		ObjectIds:   req.ObjectIds,
+		Module:      req.Module,
+	}
+	if req.ResourceId != "" {
+		grpcReq.Option = &auth.EvaluateResourceRequest_ResourceId{ResourceId: req.ResourceId}
+	} else {
+		grpcReq.Option = &auth.EvaluateResourceRequest_ResourceName{ResourceName: req.ResourceName}
+	}
+
+	res, err := c.EvaluationGrpcClient.EvaluateResource(grpcReq, md)
+
+	if err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	if apiutil.HasGrpcError(res.Error) {
+		return apiutil.AsGrpcError(res.Error)
+	}
+
+	return apiutil.AsServerResponse(ctx, &authmodel.EvaluateResourceResponse{
+		Code: apiutil.AsSuccessCode(),
+		Data: authmodel.EvaluateResource{
+			Items: res.Evaluations,
+		},
+	})
+}
