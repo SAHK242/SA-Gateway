@@ -21,6 +21,8 @@ func (r *AuthRoute) Register(props *common.RouterProps) {
 	router.Post("/change-password", r.AuthController.ChangePassword)
 	router.Post("/create-employee", r.AuthController.CreateEmployee)
 	router.Post("/create-department", r.AuthController.CreateDepartment)
+	router.Get("/list-employee", r.AuthController.ListEmployee)
+	router.Get("/list-department", r.AuthController.ListDepartment)
 }
 
 func (r *AuthRoute) SubPath() string {

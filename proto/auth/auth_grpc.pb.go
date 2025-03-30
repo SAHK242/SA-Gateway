@@ -8,10 +8,10 @@ package auth
 
 import (
 	context "context"
+	gcommon "gateway/proto/gcommon"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	gcommon "gateway/proto/gcommon"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,6 +24,8 @@ const (
 	AuthService_ChangePassword_FullMethodName   = "/auth.AuthService/ChangePassword"
 	AuthService_CreateEmployee_FullMethodName   = "/auth.AuthService/CreateEmployee"
 	AuthService_CreateDepartment_FullMethodName = "/auth.AuthService/CreateDepartment"
+	AuthService_ListEmployee_FullMethodName     = "/auth.AuthService/ListEmployee"
+	AuthService_ListDepartment_FullMethodName   = "/auth.AuthService/ListDepartment"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -34,6 +36,8 @@ type AuthServiceClient interface {
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error)
 	CreateEmployee(ctx context.Context, in *CreateEmployeeRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error)
 	CreateDepartment(ctx context.Context, in *CreateDepartmentRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error)
+	ListEmployee(ctx context.Context, in *ListEmployeeRequest, opts ...grpc.CallOption) (*ListEmployeeResponse, error)
+	ListDepartment(ctx context.Context, in *ListDepartmentRequest, opts ...grpc.CallOption) (*ListDepartmentResponse, error)
 }
 
 type authServiceClient struct {
@@ -84,6 +88,26 @@ func (c *authServiceClient) CreateDepartment(ctx context.Context, in *CreateDepa
 	return out, nil
 }
 
+func (c *authServiceClient) ListEmployee(ctx context.Context, in *ListEmployeeRequest, opts ...grpc.CallOption) (*ListEmployeeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListEmployeeResponse)
+	err := c.cc.Invoke(ctx, AuthService_ListEmployee_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ListDepartment(ctx context.Context, in *ListDepartmentRequest, opts ...grpc.CallOption) (*ListDepartmentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListDepartmentResponse)
+	err := c.cc.Invoke(ctx, AuthService_ListDepartment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -92,6 +116,8 @@ type AuthServiceServer interface {
 	ChangePassword(context.Context, *ChangePasswordRequest) (*gcommon.EmptyResponse, error)
 	CreateEmployee(context.Context, *CreateEmployeeRequest) (*gcommon.EmptyResponse, error)
 	CreateDepartment(context.Context, *CreateDepartmentRequest) (*gcommon.EmptyResponse, error)
+	ListEmployee(context.Context, *ListEmployeeRequest) (*ListEmployeeResponse, error)
+	ListDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -110,6 +136,12 @@ func (UnimplementedAuthServiceServer) CreateEmployee(context.Context, *CreateEmp
 }
 func (UnimplementedAuthServiceServer) CreateDepartment(context.Context, *CreateDepartmentRequest) (*gcommon.EmptyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDepartment not implemented")
+}
+func (UnimplementedAuthServiceServer) ListEmployee(context.Context, *ListEmployeeRequest) (*ListEmployeeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListEmployee not implemented")
+}
+func (UnimplementedAuthServiceServer) ListDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDepartment not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -196,6 +228,42 @@ func _AuthService_CreateDepartment_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_ListEmployee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListEmployeeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListEmployee(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ListEmployee_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListEmployee(ctx, req.(*ListEmployeeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ListDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDepartmentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListDepartment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ListDepartment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListDepartment(ctx, req.(*ListDepartmentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -218,6 +286,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateDepartment",
 			Handler:    _AuthService_CreateDepartment_Handler,
+		},
+		{
+			MethodName: "ListEmployee",
+			Handler:    _AuthService_ListEmployee_Handler,
+		},
+		{
+			MethodName: "ListDepartment",
+			Handler:    _AuthService_ListDepartment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

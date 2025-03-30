@@ -86,6 +86,52 @@ definitions:
       username:
         type: string
     type: object
+  authmodel.Departments:
+    properties:
+      departments:
+        items:
+          $ref: '#/definitions/auth.Department'
+        type: array
+      hasNext:
+        type: boolean
+      hasPrevious:
+        type: boolean
+      page:
+        type: integer
+      size:
+        type: integer
+      totalElements:
+        description: Num items in all pages
+        type: integer
+      totalItems:
+        description: Num items in current page
+        type: integer
+      totalPages:
+        type: integer
+    type: object
+  authmodel.Employees:
+    properties:
+      employees:
+        items:
+          $ref: '#/definitions/auth.User'
+        type: array
+      hasNext:
+        type: boolean
+      hasPrevious:
+        type: boolean
+      page:
+        type: integer
+      size:
+        type: integer
+      totalElements:
+        description: Num items in all pages
+        type: integer
+      totalItems:
+        description: Num items in current page
+        type: integer
+      totalPages:
+        type: integer
+    type: object
   authmodel.GenerateLoginSecretRequest:
     properties:
       data:
@@ -97,6 +143,20 @@ definitions:
         type: string
       data:
         $ref: '#/definitions/authmodel.LoginSecret'
+    type: object
+  authmodel.ListDepartment:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/authmodel.Departments'
+    type: object
+  authmodel.ListEmployee:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/authmodel.Employees'
     type: object
   authmodel.LoginResponse:
     properties:
@@ -220,6 +280,132 @@ paths:
       security:
       - JWT: []
       summary: Create Employee
+      tags:
+      - SA - Auth
+  /auth/list-department:
+    get:
+      consumes:
+      - application/json
+      description: List Department
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Sort field. Default to name,asc
+        enum:
+        - name
+        - code
+        in: query
+        name: sort
+        type: string
+      - description: Ignore pagination and return all data
+        in: query
+        name: paging_ignored
+        type: boolean
+      - description: Search by name
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authmodel.ListDepartment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: List Department
+      tags:
+      - SA - Auth
+  /auth/list-employee:
+    get:
+      consumes:
+      - application/json
+      description: List Employee
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Sort field. Default to code,asc
+        enum:
+        - name
+        - code
+        in: query
+        name: sort
+        type: string
+      - description: Ignore pagination and return all data
+        in: query
+        name: paging_ignored
+        type: boolean
+      - description: Filter by department id
+        in: query
+        name: department_id
+        type: string
+      - description: Search by name or email, code, phone number
+        in: query
+        name: search
+        type: string
+      - description: Filter by employee id
+        in: query
+        name: employee_id
+        type: string
+      - description: 'Filter by employee type 1: Doctor, 2: Nurse'
+        in: query
+        name: employee_type
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authmodel.ListEmployee'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: List Employee
       tags:
       - SA - Auth
   /auth/login:

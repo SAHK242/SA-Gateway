@@ -190,3 +190,100 @@ func (c *AuthController) CreateDepartment(ctx *fiber.Ctx) error {
 		Message: "OK",
 	})
 }
+
+// ListEmployee
+// @Summary     List Employee
+// @Description List Employee
+// @Tags        SA - Auth
+// @Accept      json
+// @Produce     json
+// @Param       page            query    int    false "Page number"
+// @Param       size            query    int    false "Page size"
+// @Param       sort            query    string false "Sort field. Default to code,asc" Enums(name, code)
+// @Param       paging_ignored  query    bool   false "Ignore pagination and return all data"
+// @Param       department_id   query    string false "Filter by department id"
+// @Param       search          query    string false "Search by name or email, code, phone number"
+// @Param       employee_id    query    string false "Filter by employee id"
+// @Param       employee_type  query    int   false "Filter by employee type 1: Doctor, 2: Nurse"
+// @Success     200             {object} authmodel.ListEmployee
+// @Failure     400,401,403,500 {object} basemodel.ApiError
+// @Router      /auth/list-employee [get]
+// @Security    JWT
+func (c *AuthController) ListEmployee(ctx *fiber.Ctx) error {
+	md := grpcutil.WithModuleACLMetadata(ctx, gcommon.Module_MODULE_AUTH)
+
+	req := c.buildListRequest(ctx)
+
+	res, err := c.AuthGrpcClient.ListEmployee(req, md)
+
+	if err != nil {
+		return apiutil.AsApiError(err)
+	}
+
+	if apiutil.HasGrpcError(res.Error) {
+		return apiutil.AsApiError(err)
+	}
+
+	return apiutil.AsServerResponse(ctx, &authmodel.ListEmployee{
+		Code: apiutil.AsSuccessCode(),
+		Data: authmodel.Employees{
+			PageMetadata: apiutil.AsPageMetadata(res.PageMetadata, req.Pageable, res.Employees),
+			Employees:    res.Employees,
+		},
+	})
+
+}
+
+func (c *AuthController) buildListRequest(ctx *fiber.Ctx) *auth.ListEmployeeRequest {
+	req := &auth.ListEmployeeRequest{
+		Pageable:     apiutil.AsPageable(ctx, "code,asc"),
+		DepartmentId: ctx.Query("department_id"),
+		Search:       ctx.Query("search"),
+		EmployeeId:   ctx.Query("employee_id"),
+		EmployeeType: auth.EmployeeType(ctx.QueryInt("employee_type")),
+	}
+	return req
+}
+
+// ListDepartment
+// @Summary     List Department
+// @Description List Department
+// @Tags        SA - Auth
+// @Accept      json
+// @Produce     json
+// @Param       page            query    int    false "Page number"
+// @Param       size            query    int    false "Page size"
+// @Param       sort            query    string false "Sort field. Default to name,asc" Enums(name, code)
+// @Param       paging_ignored  query    bool   false "Ignore pagination and return all data"
+// @Param       search          query    string false "Search by name"
+// @Success     200             {object} authmodel.ListDepartment
+// @Failure     400,401,403,500 {object} basemodel.ApiError
+// @Router      /auth/list-department [get]
+// @Security    JWT
+func (c *AuthController) ListDepartment(ctx *fiber.Ctx) error {
+	md := grpcutil.WithModuleACLMetadata(ctx, gcommon.Module_MODULE_AUTH)
+
+	req := c.buildListDepartmentRequest(ctx)
+
+	if res, err := c.AuthGrpcClient.ListDepartment(req, md); err != nil {
+		return apiutil.AsApiError(err)
+	} else if res != nil && apiutil.HasGrpcError(res.Error) {
+		return apiutil.AsGrpcError(res.Error)
+	} else {
+		return apiutil.AsServerResponse(ctx, &authmodel.ListDepartment{
+			Code: apiutil.AsSuccessCode(),
+			Data: authmodel.Departments{
+				PageMetadata: apiutil.AsPageMetadata(res.PageMetadata, req.Pageable, res.Departments),
+				Departments:  res.Departments,
+			},
+		})
+	}
+}
+
+func (c *AuthController) buildListDepartmentRequest(ctx *fiber.Ctx) *auth.ListDepartmentRequest {
+	req := &auth.ListDepartmentRequest{
+		Pageable: apiutil.AsPageable(ctx, "name,asc"),
+		Search:   ctx.Query("search"),
+	}
+	return req
+}

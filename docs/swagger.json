@@ -130,6 +130,200 @@
                 }
             }
         },
+        "/auth/list-department": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "List Department",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Auth"
+                ],
+                "summary": "List Department",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "name",
+                            "code"
+                        ],
+                        "type": "string",
+                        "description": "Sort field. Default to name,asc",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Ignore pagination and return all data",
+                        "name": "paging_ignored",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by name",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authmodel.ListDepartment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/list-employee": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "List Employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Auth"
+                ],
+                "summary": "List Employee",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "name",
+                            "code"
+                        ],
+                        "type": "string",
+                        "description": "Sort field. Default to code,asc",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Ignore pagination and return all data",
+                        "name": "paging_ignored",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by department id",
+                        "name": "department_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by name or email, code, phone number",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by employee id",
+                        "name": "employee_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter by employee type 1: Doctor, 2: Nurse",
+                        "name": "employee_type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authmodel.ListEmployee"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "security": [
@@ -384,6 +578,74 @@
                 }
             }
         },
+        "authmodel.Departments": {
+            "type": "object",
+            "properties": {
+                "departments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/auth.Department"
+                    }
+                },
+                "hasNext": {
+                    "type": "boolean"
+                },
+                "hasPrevious": {
+                    "type": "boolean"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "totalElements": {
+                    "description": "Num items in all pages",
+                    "type": "integer"
+                },
+                "totalItems": {
+                    "description": "Num items in current page",
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "authmodel.Employees": {
+            "type": "object",
+            "properties": {
+                "employees": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/auth.User"
+                    }
+                },
+                "hasNext": {
+                    "type": "boolean"
+                },
+                "hasPrevious": {
+                    "type": "boolean"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "totalElements": {
+                    "description": "Num items in all pages",
+                    "type": "integer"
+                },
+                "totalItems": {
+                    "description": "Num items in current page",
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                }
+            }
+        },
         "authmodel.GenerateLoginSecretRequest": {
             "type": "object",
             "properties": {
@@ -400,6 +662,28 @@
                 },
                 "data": {
                     "$ref": "#/definitions/authmodel.LoginSecret"
+                }
+            }
+        },
+        "authmodel.ListDepartment": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {
+                    "$ref": "#/definitions/authmodel.Departments"
+                }
+            }
+        },
+        "authmodel.ListEmployee": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {
+                    "$ref": "#/definitions/authmodel.Employees"
                 }
             }
         },
