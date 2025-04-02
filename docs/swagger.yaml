@@ -199,6 +199,129 @@ definitions:
       message:
         type: string
     type: object
+  patient.InpatientDetail:
+    properties:
+      admission_date:
+        type: integer
+      diagnosis:
+        type: string
+      discharge_date:
+        type: integer
+      doctor_id:
+        type: string
+      id:
+        type: string
+      inpatient_id:
+        type: string
+      invoice:
+        $ref: '#/definitions/patient.Invoice'
+      nurse_id:
+        type: string
+      sickroom:
+        type: string
+    type: object
+  patient.Invoice:
+    properties:
+      due_date:
+        type: integer
+      id:
+        type: string
+      invoice_date:
+        type: integer
+      total_amount:
+        type: number
+    type: object
+  patient.OutpatientDetail:
+    properties:
+      doctor_id:
+        type: string
+      id:
+        type: string
+      invoice:
+        $ref: '#/definitions/patient.Invoice'
+      outpatient_id:
+        type: string
+    type: object
+  patient.Patient:
+    properties:
+      address:
+        type: string
+      date_of_birth:
+        type: integer
+      first_name:
+        type: string
+      gender:
+        type: integer
+      id:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  patient.PatientDetail:
+    properties:
+      inpatient_detail:
+        $ref: '#/definitions/patient.InpatientDetail'
+      outpatient_detail:
+        $ref: '#/definitions/patient.OutpatientDetail'
+      patient:
+        $ref: '#/definitions/patient.Patient'
+    type: object
+  patient.UpsertPatientRequest:
+    properties:
+      address:
+        type: string
+      date_of_birth:
+        type: integer
+      first_name:
+        type: string
+      gender:
+        type: integer
+      id:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  patientmodel.GetPatientResponse:
+    properties:
+      code:
+        type: string
+      patientDetail:
+        $ref: '#/definitions/patient.PatientDetail'
+    type: object
+  patientmodel.ListPatientResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/patientmodel.ListPatientResponseData'
+    type: object
+  patientmodel.ListPatientResponseData:
+    properties:
+      hasNext:
+        type: boolean
+      hasPrevious:
+        type: boolean
+      page:
+        type: integer
+      patients:
+        items:
+          $ref: '#/definitions/patient.PatientDetail'
+        type: array
+      size:
+        type: integer
+      totalElements:
+        description: Num items in all pages
+        type: integer
+      totalItems:
+        description: Num items in current page
+        type: integer
+      totalPages:
+        type: integer
+    type: object
 info:
   contact: {}
 paths:
@@ -408,6 +531,62 @@ paths:
       summary: List Employee
       tags:
       - SA - Auth
+  /auth/list-patient:
+    get:
+      consumes:
+      - application/json
+      description: List Employee
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Sort field. Default to name,asc
+        enum:
+        - name
+        in: query
+        name: sort
+        type: string
+      - description: Ignore pagination and return all data
+        in: query
+        name: paging_ignored
+        type: boolean
+      - description: Search by name
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/patientmodel.ListPatientResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: List Employee
+      tags:
+      - SA - Patient Management
   /auth/login:
     post:
       consumes:
@@ -486,4 +665,83 @@ paths:
       summary: Pre-flight Login
       tags:
       - SA - Auth
+  /patient/get-patient/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Patient
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/patientmodel.GetPatientResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Get Patient
+      tags:
+      - SA - Patient Management
+  /patient/upsert-patient:
+    post:
+      consumes:
+      - application/json
+      description: Upsert Patient
+      parameters:
+      - description: Upsert patient Request
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/patient.UpsertPatientRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/basemodel.ApiEmptyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Upsert Patient
+      tags:
+      - SA - Patient Management
 swagger: "2.0"

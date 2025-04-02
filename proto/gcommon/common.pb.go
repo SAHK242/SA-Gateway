@@ -586,18 +586,68 @@ func (Gender) EnumDescriptor() ([]byte, []int) {
 	return file_common_common_proto_rawDescGZIP(), []int{9}
 }
 
+type PatientType int32
+
+const (
+	PatientType_PATIENT_TYPE_UNSPECIFIED PatientType = 0
+	PatientType_PATIENT_TYPE_INPATIENT   PatientType = 1
+	PatientType_PATIENT_TYPE_OUTPATIENT  PatientType = 2
+)
+
+// Enum value maps for PatientType.
+var (
+	PatientType_name = map[int32]string{
+		0: "PATIENT_TYPE_UNSPECIFIED",
+		1: "PATIENT_TYPE_INPATIENT",
+		2: "PATIENT_TYPE_OUTPATIENT",
+	}
+	PatientType_value = map[string]int32{
+		"PATIENT_TYPE_UNSPECIFIED": 0,
+		"PATIENT_TYPE_INPATIENT":   1,
+		"PATIENT_TYPE_OUTPATIENT":  2,
+	}
+)
+
+func (x PatientType) Enum() *PatientType {
+	p := new(PatientType)
+	*p = x
+	return p
+}
+
+func (x PatientType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PatientType) Descriptor() protoreflect.EnumDescriptor {
+	return file_common_common_proto_enumTypes[10].Descriptor()
+}
+
+func (PatientType) Type() protoreflect.EnumType {
+	return &file_common_common_proto_enumTypes[10]
+}
+
+func (x PatientType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PatientType.Descriptor instead.
+func (PatientType) EnumDescriptor() ([]byte, []int) {
+	return file_common_common_proto_rawDescGZIP(), []int{10}
+}
+
 // This message should not be used as an input parameter in the gRPC services.
 // Instead of that, it is supposed to be used as a composite field in gRPC service's inputs
 //
 // For example:
-// service UserService {
-//    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {};
-// }
 //
-// message ListUsersRequest {
-//    common.Pageable pageable = 1;
-//    string first_name = 2;
-// }
+//	service UserService {
+//	   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {};
+//	}
+//
+//	message ListUsersRequest {
+//	   common.Pageable pageable = 1;
+//	   string first_name = 2;
+//	}
 //
 // @field page starts from 1. implementer should add a normalization step to make sure data validity
 // @field size page size, must greater or equal to 1. implementer should add a normalization step to make sure data validity
@@ -799,13 +849,13 @@ func (*EmptyRequest) Descriptor() ([]byte, []int) {
 	return file_common_common_proto_rawDescGZIP(), []int{3}
 }
 
-//*
+// *
 // =========================================================================================================
 // =========================================================================================================
 // =========================================================================================================
 // =========================================================================================================
 //
-// COMMON RESPONSES
+// # COMMON RESPONSES
 //
 // =========================================================================================================
 // =========================================================================================================
@@ -931,14 +981,15 @@ func (x *Error) GetDetails() []*ErrorDetail {
 // The messing should be used as an composite field in response messages to wrap up pagination metadata
 //
 // For example,
-// service UserService {
-//    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {};
-// }
 //
-// message ListUsersResponse {
-//    PageMetadata metadata = 1;
-//    repeated User items = 2;
-// }
+//	service UserService {
+//	   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {};
+//	}
+//
+//	message ListUsersResponse {
+//	   PageMetadata metadata = 1;
+//	   repeated User items = 2;
+//	}
 //
 // @field page when `paging_ignored` (see `Pageable` message above) was set to true, it must be set to 1
 // @field size when `paging_ignored` (see `Pageable` message above) was set to true, it must equal to the `total_elements`
@@ -1031,9 +1082,10 @@ func (x *PageMetadata) GetHasPrevious() bool {
 // Sometimes, a gRPC API simply does not need return any data. You can use the message for that case
 //
 // For example,
-// service UserService {
-//    rpc DeleteUser(IdRequest) returns (EmptyResponse) {};
-// }
+//
+//	service UserService {
+//	   rpc DeleteUser(IdRequest) returns (EmptyResponse) {};
+//	}
 //
 // @field error this is defined as an optional field. when being presented, it provides client a signal for API error
 type EmptyResponse struct {
@@ -1589,11 +1641,17 @@ var file_common_common_proto_rawDesc = []byte{
 	0x10, 0x00, 0x12, 0x0f, 0x0a, 0x0b, 0x47, 0x45, 0x4e, 0x44, 0x45, 0x52, 0x5f, 0x4d, 0x41, 0x4c,
 	0x45, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x47, 0x45, 0x4e, 0x44, 0x45, 0x52, 0x5f, 0x46, 0x45,
 	0x4d, 0x41, 0x4c, 0x45, 0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x47, 0x45, 0x4e, 0x44, 0x45, 0x52,
-	0x5f, 0x4f, 0x54, 0x48, 0x45, 0x52, 0x10, 0x03, 0x42, 0x33, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e,
-	0x73, 0x61, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x42,
-	0x0b, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x0d,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x5f, 0x4f, 0x54, 0x48, 0x45, 0x52, 0x10, 0x03, 0x2a, 0x64, 0x0a, 0x0b, 0x50, 0x61, 0x74, 0x69,
+	0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x1c, 0x0a, 0x18, 0x50, 0x41, 0x54, 0x49, 0x45,
+	0x4e, 0x54, 0x5f, 0x54, 0x59, 0x50, 0x45, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46,
+	0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x1a, 0x0a, 0x16, 0x50, 0x41, 0x54, 0x49, 0x45, 0x4e, 0x54,
+	0x5f, 0x54, 0x59, 0x50, 0x45, 0x5f, 0x49, 0x4e, 0x50, 0x41, 0x54, 0x49, 0x45, 0x4e, 0x54, 0x10,
+	0x01, 0x12, 0x1b, 0x0a, 0x17, 0x50, 0x41, 0x54, 0x49, 0x45, 0x4e, 0x54, 0x5f, 0x54, 0x59, 0x50,
+	0x45, 0x5f, 0x4f, 0x55, 0x54, 0x50, 0x41, 0x54, 0x49, 0x45, 0x4e, 0x54, 0x10, 0x02, 0x42, 0x33,
+	0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x61, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x63,
+	0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x42, 0x0b, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x50, 0x72, 0x6f,
+	0x74, 0x6f, 0x50, 0x01, 0x5a, 0x0d, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x63, 0x6f, 0x6d,
+	0x6d, 0x6f, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1608,7 +1666,7 @@ func file_common_common_proto_rawDescGZIP() []byte {
 	return file_common_common_proto_rawDescData
 }
 
-var file_common_common_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
+var file_common_common_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
 var file_common_common_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_common_common_proto_goTypes = []any{
 	(Module)(0),               // 0: common.Module
@@ -1621,29 +1679,30 @@ var file_common_common_proto_goTypes = []any{
 	(LogicalOp)(0),            // 7: common.LogicalOp
 	(ValidationLevel)(0),      // 8: common.ValidationLevel
 	(Gender)(0),               // 9: common.Gender
-	(*Pageable)(nil),          // 10: common.Pageable
-	(*IdRequest)(nil),         // 11: common.IdRequest
-	(*IdsRequest)(nil),        // 12: common.IdsRequest
-	(*EmptyRequest)(nil),      // 13: common.EmptyRequest
-	(*ErrorDetail)(nil),       // 14: common.ErrorDetail
-	(*Error)(nil),             // 15: common.Error
-	(*PageMetadata)(nil),      // 16: common.PageMetadata
-	(*EmptyResponse)(nil),     // 17: common.EmptyResponse
-	(*ExistenceResponse)(nil), // 18: common.ExistenceResponse
-	(*IdResponse)(nil),        // 19: common.IdResponse
-	(*IdsResponse)(nil),       // 20: common.IdsResponse
-	(*DateRange)(nil),         // 21: common.DateRange
-	(*OptionalDateRange)(nil), // 22: common.OptionalDateRange
-	(*ValidationError)(nil),   // 23: common.ValidationError
-	(Code)(0),                 // 24: common.Code
+	(PatientType)(0),          // 10: common.PatientType
+	(*Pageable)(nil),          // 11: common.Pageable
+	(*IdRequest)(nil),         // 12: common.IdRequest
+	(*IdsRequest)(nil),        // 13: common.IdsRequest
+	(*EmptyRequest)(nil),      // 14: common.EmptyRequest
+	(*ErrorDetail)(nil),       // 15: common.ErrorDetail
+	(*Error)(nil),             // 16: common.Error
+	(*PageMetadata)(nil),      // 17: common.PageMetadata
+	(*EmptyResponse)(nil),     // 18: common.EmptyResponse
+	(*ExistenceResponse)(nil), // 19: common.ExistenceResponse
+	(*IdResponse)(nil),        // 20: common.IdResponse
+	(*IdsResponse)(nil),       // 21: common.IdsResponse
+	(*DateRange)(nil),         // 22: common.DateRange
+	(*OptionalDateRange)(nil), // 23: common.OptionalDateRange
+	(*ValidationError)(nil),   // 24: common.ValidationError
+	(Code)(0),                 // 25: common.Code
 }
 var file_common_common_proto_depIdxs = []int32{
-	24, // 0: common.Error.code:type_name -> common.Code
-	14, // 1: common.Error.details:type_name -> common.ErrorDetail
-	15, // 2: common.EmptyResponse.error:type_name -> common.Error
-	15, // 3: common.ExistenceResponse.error:type_name -> common.Error
-	15, // 4: common.IdResponse.error:type_name -> common.Error
-	15, // 5: common.IdsResponse.error:type_name -> common.Error
+	25, // 0: common.Error.code:type_name -> common.Code
+	15, // 1: common.Error.details:type_name -> common.ErrorDetail
+	16, // 2: common.EmptyResponse.error:type_name -> common.Error
+	16, // 3: common.ExistenceResponse.error:type_name -> common.Error
+	16, // 4: common.IdResponse.error:type_name -> common.Error
+	16, // 5: common.IdsResponse.error:type_name -> common.Error
 	8,  // 6: common.ValidationError.level:type_name -> common.ValidationLevel
 	7,  // [7:7] is the sub-list for method output_type
 	7,  // [7:7] is the sub-list for method input_type
@@ -1665,7 +1724,7 @@ func file_common_common_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_common_proto_rawDesc,
-			NumEnums:      10,
+			NumEnums:      11,
 			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,

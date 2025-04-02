@@ -19,5 +19,6 @@
     "limiter_max": 100,
     "limiter_expiration": 30,
     "auth_grpc_server": "localhost:3001",
+    "patient_grpc_server": "localhost:3002",
     "jwt_secret": "sasasasa"
 }

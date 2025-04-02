@@ -18,6 +18,10 @@ var Module = fx.Provide(
 		NewAuthGrpcConn,
 		fx.ResultTags(`name:"authConn"`),
 	),
+	fx.Annotate(
+		NewPatientGrpcConn,
+		fx.ResultTags(`name:"patientConn"`),
+	),
 )
 
 func newGrpcConn(cfg config.Config, logger *zap.SugaredLogger, serverName string) *grpc.ClientConn {
@@ -35,6 +39,10 @@ func newGrpcConn(cfg config.Config, logger *zap.SugaredLogger, serverName string
 
 func NewAuthGrpcConn(cfg config.Config, logger *zap.SugaredLogger) *grpc.ClientConn {
 	return newGrpcConn(cfg, logger, "AUTH_GRPC_SERVER")
+}
+
+func NewPatientGrpcConn(cfg config.Config, logger *zap.SugaredLogger) *grpc.ClientConn {
+	return newGrpcConn(cfg, logger, "PATIENT_GRPC_SERVER")
 }
 
 func CustomClientLoggingInterceptor(logger *zap.Logger) grpc.UnaryClientInterceptor {
