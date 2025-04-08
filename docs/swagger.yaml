@@ -10,6 +10,11 @@ definitions:
       username:
         type: string
     type: object
+  auth.CreateDepartmentRequest:
+    properties:
+      name:
+        type: string
+    type: object
   auth.CreateEmployeeRequest:
     properties:
       address:
@@ -199,53 +204,158 @@ definitions:
       message:
         type: string
     type: object
-  patient.InpatientDetail:
+  patient.MedicalHistory:
     properties:
-      admission_date:
+      created_at:
         type: integer
+      created_by:
+        $ref: '#/definitions/patient.User'
       diagnosis:
         type: string
-      discharge_date:
-        type: integer
-      doctor_id:
+      doctor_notes:
         type: string
+      has_prescription:
+        type: boolean
+      has_surgery:
+        type: boolean
+      has_treatment:
+        type: boolean
       id:
         type: string
-      inpatient_id:
-        type: string
-      invoice:
-        $ref: '#/definitions/patient.Invoice'
-      nurse_id:
-        type: string
-      sickroom:
-        type: string
-    type: object
-  patient.Invoice:
-    properties:
-      due_date:
+      medical_end_date:
         type: integer
-      id:
+      patient_id:
         type: string
-      invoice_date:
-        type: integer
-      total_amount:
+      reason:
+        type: string
+      total_fee:
         type: number
+      updated_at:
+        type: integer
+      updated_by:
+        $ref: '#/definitions/patient.User'
     type: object
-  patient.OutpatientDetail:
+  patient.MedicalMedication:
     properties:
-      doctor_id:
-        type: string
       id:
         type: string
-      invoice:
-        $ref: '#/definitions/patient.Invoice'
-      outpatient_id:
+      medication:
+        $ref: '#/definitions/patient.Medication'
+      quantity:
+        type: integer
+    type: object
+  patient.MedicalPrescription:
+    properties:
+      created_at:
+        type: integer
+      created_by:
+        $ref: '#/definitions/patient.User'
+      fee:
+        type: number
+      id:
         type: string
+      medical_history_id:
+        type: string
+      medications:
+        items:
+          $ref: '#/definitions/patient.MedicalMedication'
+        type: array
+      prescription_date:
+        type: integer
+    type: object
+  patient.MedicalSurgery:
+    properties:
+      created_at:
+        type: integer
+      created_by:
+        $ref: '#/definitions/patient.User'
+      description:
+        type: string
+      end_date:
+        type: integer
+      fee:
+        type: number
+      id:
+        type: string
+      main_doctor_id:
+        type: string
+      medical_history_id:
+        type: string
+      name:
+        type: string
+      result:
+        type: string
+      start_date:
+        type: integer
+      support_doctor_ids:
+        description: List of doctor ids, separated by comma
+        type: string
+      support_nurse_ids:
+        description: List of nurse ids, separated by comma
+        type: string
+      updated_at:
+        type: integer
+      updated_by:
+        $ref: '#/definitions/patient.User'
+    type: object
+  patient.MedicalTreatment:
+    properties:
+      created_at:
+        type: integer
+      created_by:
+        $ref: '#/definitions/patient.User'
+      description:
+        type: string
+      end_date:
+        type: integer
+      fee:
+        type: number
+      id:
+        type: string
+      main_doctor_id:
+        type: string
+      medical_history_id:
+        type: string
+      name:
+        type: string
+      result:
+        type: string
+      start_date:
+        type: integer
+      support_doctor_ids:
+        description: List of doctor ids, separated by comma
+        type: string
+      support_nurse_ids:
+        description: List of nurse ids, separated by comma
+        type: string
+      updated_at:
+        type: integer
+      updated_by:
+        $ref: '#/definitions/patient.User'
+    type: object
+  patient.Medication:
+    properties:
+      effects:
+        type: string
+      expired_date:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
     type: object
   patient.Patient:
     properties:
       address:
         type: string
+      created_at:
+        type: integer
+      created_by:
+        $ref: '#/definitions/patient.User'
       date_of_birth:
         type: integer
       first_name:
@@ -258,15 +368,110 @@ definitions:
         type: string
       phone_number:
         type: string
+      updated_at:
+        type: integer
+      updated_by:
+        $ref: '#/definitions/patient.User'
     type: object
-  patient.PatientDetail:
+  patient.PrescriptionMedication:
     properties:
-      inpatient_detail:
-        $ref: '#/definitions/patient.InpatientDetail'
-      outpatient_detail:
-        $ref: '#/definitions/patient.OutpatientDetail'
-      patient:
-        $ref: '#/definitions/patient.Patient'
+      medication_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  patient.UpsertMedicalPrescriptionRequest:
+    properties:
+      medical_history_id:
+        type: string
+      medications:
+        items:
+          $ref: '#/definitions/patient.PrescriptionMedication'
+        type: array
+    type: object
+  patient.UpsertMedicalRecordRequest:
+    properties:
+      diagnosis:
+        type: string
+      doctor_notes:
+        type: string
+      id:
+        type: string
+      medical_end_date:
+        type: integer
+      patient_id:
+        type: string
+      reason:
+        type: string
+    type: object
+  patient.UpsertMedicalSurgeryRequest:
+    properties:
+      description:
+        type: string
+      end_date:
+        type: integer
+      fee:
+        type: number
+      id:
+        type: string
+      main_doctor_id:
+        type: string
+      medical_history_id:
+        type: string
+      name:
+        type: string
+      result:
+        type: string
+      start_date:
+        type: integer
+      support_doctor_ids:
+        description: List of doctor ids, separated by comma
+        type: string
+      support_nurse_ids:
+        description: List of nurse ids, separated by comma
+        type: string
+    type: object
+  patient.UpsertMedicalTreatmentRequest:
+    properties:
+      description:
+        type: string
+      end_date:
+        type: integer
+      fee:
+        type: number
+      id:
+        type: string
+      main_doctor_id:
+        type: string
+      medical_history_id:
+        type: string
+      name:
+        type: string
+      result:
+        type: string
+      start_date:
+        type: integer
+      support_doctor_ids:
+        description: List of doctor ids, separated by comma
+        type: string
+      support_nurse_ids:
+        description: List of nurse ids, separated by comma
+        type: string
+    type: object
+  patient.UpsertMedicationRequest:
+    properties:
+      effects:
+        type: string
+      expired_date:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
     type: object
   patient.UpsertPatientRequest:
     properties:
@@ -282,15 +487,91 @@ definitions:
         type: string
       last_name:
         type: string
+      phone:
+        type: string
+    type: object
+  patient.User:
+    properties:
+      code:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: integer
+      id:
+        type: string
+      last_name:
+        type: string
       phone_number:
         type: string
+    type: object
+  patientmodel.GetMedicalHistoryDetailResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/patientmodel.GetMedicalHistoryDetailResponseData'
+    type: object
+  patientmodel.GetMedicalHistoryDetailResponseData:
+    properties:
+      medical_history:
+        $ref: '#/definitions/patient.MedicalHistory'
+      medical_prescriptions:
+        items:
+          $ref: '#/definitions/patient.MedicalPrescription'
+        type: array
+      medical_surgeries:
+        items:
+          $ref: '#/definitions/patient.MedicalSurgery'
+        type: array
+      medical_treatments:
+        items:
+          $ref: '#/definitions/patient.MedicalTreatment'
+        type: array
+    type: object
+  patientmodel.GetMedicalHistoryResponse:
+    properties:
+      code:
+        type: string
+      medical_history:
+        $ref: '#/definitions/patientmodel.MedicalHistoryData'
     type: object
   patientmodel.GetPatientResponse:
     properties:
       code:
         type: string
-      patientDetail:
-        $ref: '#/definitions/patient.PatientDetail'
+      patient:
+        $ref: '#/definitions/patient.Patient'
+    type: object
+  patientmodel.ListMedicationResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/patientmodel.ListMedicationResponseData'
+    type: object
+  patientmodel.ListMedicationResponseData:
+    properties:
+      hasNext:
+        type: boolean
+      hasPrevious:
+        type: boolean
+      medications:
+        items:
+          $ref: '#/definitions/patient.Medication'
+        type: array
+      page:
+        type: integer
+      size:
+        type: integer
+      totalElements:
+        description: Num items in all pages
+        type: integer
+      totalItems:
+        description: Num items in current page
+        type: integer
+      totalPages:
+        type: integer
     type: object
   patientmodel.ListPatientResponse:
     properties:
@@ -309,8 +590,31 @@ definitions:
         type: integer
       patients:
         items:
-          $ref: '#/definitions/patient.PatientDetail'
+          $ref: '#/definitions/patient.Patient'
         type: array
+      size:
+        type: integer
+      totalElements:
+        description: Num items in all pages
+        type: integer
+      totalItems:
+        description: Num items in current page
+        type: integer
+      totalPages:
+        type: integer
+    type: object
+  patientmodel.MedicalHistoryData:
+    properties:
+      hasNext:
+        type: boolean
+      hasPrevious:
+        type: boolean
+      medical_histories:
+        items:
+          $ref: '#/definitions/patient.MedicalHistory'
+        type: array
+      page:
+        type: integer
       size:
         type: integer
       totalElements:
@@ -404,8 +708,48 @@ paths:
       - JWT: []
       summary: Create Employee
       tags:
-      - SA - Auth
-  /auth/list-department:
+      - SA - Employee
+  /auth/department/create-department:
+    post:
+      consumes:
+      - application/json
+      description: Create Department
+      parameters:
+      - description: CreateDepartmentRequest Request
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/auth.CreateDepartmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/basemodel.ApiEmptyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Create Department
+      tags:
+      - SA - Department
+  /auth/department/list-department:
     get:
       consumes:
       - application/json
@@ -461,7 +805,7 @@ paths:
       - JWT: []
       summary: List Department
       tags:
-      - SA - Auth
+      - SA - Department
   /auth/list-employee:
     get:
       consumes:
@@ -530,63 +874,7 @@ paths:
       - JWT: []
       summary: List Employee
       tags:
-      - SA - Auth
-  /auth/list-patient:
-    get:
-      consumes:
-      - application/json
-      description: List Employee
-      parameters:
-      - description: Page number
-        in: query
-        name: page
-        type: integer
-      - description: Page size
-        in: query
-        name: size
-        type: integer
-      - description: Sort field. Default to name,asc
-        enum:
-        - name
-        in: query
-        name: sort
-        type: string
-      - description: Ignore pagination and return all data
-        in: query
-        name: paging_ignored
-        type: boolean
-      - description: Search by name
-        in: query
-        name: search
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/patientmodel.ListPatientResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/basemodel.ApiError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/basemodel.ApiError'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/basemodel.ApiError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/basemodel.ApiError'
-      security:
-      - JWT: []
-      summary: List Employee
-      tags:
-      - SA - Patient Management
+      - SA - Employee
   /auth/login:
     post:
       consumes:
@@ -704,6 +992,421 @@ paths:
       summary: Get Patient
       tags:
       - SA - Patient Management
+  /patient/list-patient:
+    get:
+      consumes:
+      - application/json
+      description: List Employee
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Sort field. Default to name,asc
+        enum:
+        - name
+        in: query
+        name: sort
+        type: string
+      - description: Ignore pagination and return all data
+        in: query
+        name: paging_ignored
+        type: boolean
+      - description: Search by name
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/patientmodel.ListPatientResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: List Employee
+      tags:
+      - SA - Patient Management
+  /patient/medical:
+    post:
+      consumes:
+      - application/json
+      description: Upsert Medical Record
+      parameters:
+      - description: Upsert medical record Request
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/patient.UpsertMedicalRecordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/basemodel.ApiEmptyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Upsert Medical Record
+      tags:
+      - SA - Patient Management
+  /patient/medical/history:
+    get:
+      consumes:
+      - application/json
+      description: Get Medical History
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Ignore pagination and return all data
+        in: query
+        name: paging_ignored
+        type: boolean
+      - description: Patient ID
+        in: query
+        name: patient_id
+        required: true
+        type: string
+      - description: From date
+        in: query
+        name: from_date
+        type: string
+      - description: To date
+        in: query
+        name: to_date
+        type: string
+      - description: Created by, doctor ID or nurse ID
+        in: query
+        name: created_by
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/patientmodel.GetMedicalHistoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Get Medical History
+      tags:
+      - SA - Patient Management
+  /patient/medical/history/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Medical History Detail
+      parameters:
+      - description: Medical History ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/patientmodel.GetMedicalHistoryDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Get Medical History Detail
+      tags:
+      - SA - Patient Management
+  /patient/medical/prescription:
+    post:
+      consumes:
+      - application/json
+      description: Upsert Medical Prescription
+      parameters:
+      - description: Upsert medical prescription Request
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/patient.UpsertMedicalPrescriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/basemodel.ApiEmptyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Upsert Medical Prescription
+      tags:
+      - SA - Patient Management
+  /patient/medical/surgery:
+    post:
+      consumes:
+      - application/json
+      description: Upsert Medical Surgery
+      parameters:
+      - description: Upsert medical surgery Request
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/patient.UpsertMedicalSurgeryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/basemodel.ApiEmptyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Upsert Medical Surgery
+      tags:
+      - SA - Patient Management
+  /patient/medical/treatment:
+    post:
+      consumes:
+      - application/json
+      description: Upsert Medical Treatment
+      parameters:
+      - description: Upsert medical treatment Request
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/patient.UpsertMedicalTreatmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/basemodel.ApiEmptyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Upsert Medical Treatment
+      tags:
+      - SA - Patient Management
+  /patient/medication/list-medication:
+    get:
+      consumes:
+      - application/json
+      description: List Medication
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: size
+        type: integer
+      - description: Sort field. Default to name,asc
+        enum:
+        - name
+        - created_at
+        in: query
+        name: sort
+        type: string
+      - description: Ignore pagination and return all data
+        in: query
+        name: paging_ignored
+        type: boolean
+      - description: Search by name
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/patientmodel.ListMedicationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: List Medication
+      tags:
+      - SA - Medication Management
+  /patient/medication/upsert-medication:
+    post:
+      consumes:
+      - application/json
+      description: Upsert Medication
+      parameters:
+      - description: Upsert medication Request
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/patient.UpsertMedicationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/basemodel.ApiEmptyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/basemodel.ApiError'
+      security:
+      - JWT: []
+      summary: Upsert Medication
+      tags:
+      - SA - Medication Management
   /patient/upsert-patient:
     post:
       consumes:

@@ -17,5 +17,9 @@ func AsRoute(f any) any {
 
 var Module = fx.Provide(
 	AsRoute(authroute.NewAuthRoute),
+	AsRoute(authroute.NewDepartmentRoute),
+	AsRoute(authroute.NewEmployeeRoute),
+
 	AsRoute(patientroute.NewPatientRoute),
+	AsRoute(patientroute.NewMedicationRoute),
 )

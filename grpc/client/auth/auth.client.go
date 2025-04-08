@@ -38,39 +38,3 @@ func (c *AuthGrpcClient) ChangePassword(req *auth.ChangePasswordRequest, md meta
 
 	return c.client.ChangePassword(ctx, req, opts...)
 }
-
-func (c *AuthGrpcClient) CreateEmployee(req *auth.CreateEmployeeRequest, md metadata.MD, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
-	defer cancel()
-
-	ctx = metadata.NewOutgoingContext(ctx, md)
-
-	return c.client.CreateEmployee(ctx, req, opts...)
-}
-
-func (c *AuthGrpcClient) CreateDepartment(req *auth.CreateDepartmentRequest, md metadata.MD, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
-	defer cancel()
-
-	ctx = metadata.NewOutgoingContext(ctx, md)
-
-	return c.client.CreateDepartment(ctx, req, opts...)
-}
-
-func (c *AuthGrpcClient) ListEmployee(req *auth.ListEmployeeRequest, md metadata.MD, opts ...grpc.CallOption) (*auth.ListEmployeeResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
-	defer cancel()
-
-	ctx = metadata.NewOutgoingContext(ctx, md)
-
-	return c.client.ListEmployee(ctx, req, opts...)
-}
-
-func (c *AuthGrpcClient) ListDepartment(req *auth.ListDepartmentRequest, md metadata.MD, opts ...grpc.CallOption) (*auth.ListDepartmentResponse, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
-	defer cancel()
-
-	ctx = metadata.NewOutgoingContext(ctx, md)
-
-	return c.client.ListDepartment(ctx, req, opts...)
-}

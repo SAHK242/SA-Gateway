@@ -14,4 +14,6 @@ type GrpcProps struct {
 
 var Module = fx.Provide(
 	NewAuthGrpcClient,
+	NewEmployeeGrpcClient,
+	NewDepartmentGrpcClient,
 )

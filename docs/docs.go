@@ -94,7 +94,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SA - Auth"
+                    "SA - Employee"
                 ],
                 "summary": "Create Employee",
                 "parameters": [
@@ -142,7 +142,70 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/list-department": {
+        "/auth/department/create-department": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Create Department",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Department"
+                ],
+                "summary": "Create Department",
+                "parameters": [
+                    {
+                        "description": "CreateDepartmentRequest Request",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.CreateDepartmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiEmptyResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/department/list-department": {
             "get": {
                 "security": [
                     {
@@ -157,7 +220,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SA - Auth"
+                    "SA - Department"
                 ],
                 "summary": "List Department",
                 "parameters": [
@@ -245,7 +308,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SA - Auth"
+                    "SA - Employee"
                 ],
                 "summary": "List Employee",
                 "parameters": [
@@ -307,93 +370,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/authmodel.ListEmployee"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/basemodel.ApiError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/basemodel.ApiError"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/basemodel.ApiError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/basemodel.ApiError"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/list-patient": {
-            "get": {
-                "security": [
-                    {
-                        "JWT": []
-                    }
-                ],
-                "description": "List Employee",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "SA - Patient Management"
-                ],
-                "summary": "List Employee",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page size",
-                        "name": "size",
-                        "in": "query"
-                    },
-                    {
-                        "enum": [
-                            "name"
-                        ],
-                        "type": "string",
-                        "description": "Sort field. Default to name,asc",
-                        "name": "sort",
-                        "in": "query"
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "Ignore pagination and return all data",
-                        "name": "paging_ignored",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search by name",
-                        "name": "search",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/patientmodel.ListPatientResponse"
                         }
                     },
                     "400": {
@@ -605,6 +581,654 @@ const docTemplate = `{
                 }
             }
         },
+        "/patient/list-patient": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "List Employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Patient Management"
+                ],
+                "summary": "List Employee",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "name"
+                        ],
+                        "type": "string",
+                        "description": "Sort field. Default to name,asc",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Ignore pagination and return all data",
+                        "name": "paging_ignored",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by name",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/patientmodel.ListPatientResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/medical": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Upsert Medical Record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Patient Management"
+                ],
+                "summary": "Upsert Medical Record",
+                "parameters": [
+                    {
+                        "description": "Upsert medical record Request",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/patient.UpsertMedicalRecordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiEmptyResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/medical/history": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Get Medical History",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Patient Management"
+                ],
+                "summary": "Get Medical History",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Ignore pagination and return all data",
+                        "name": "paging_ignored",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Patient ID",
+                        "name": "patient_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "From date",
+                        "name": "from_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "To date",
+                        "name": "to_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Created by, doctor ID or nurse ID",
+                        "name": "created_by",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/patientmodel.GetMedicalHistoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/medical/history/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Get Medical History Detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Patient Management"
+                ],
+                "summary": "Get Medical History Detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Medical History ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/patientmodel.GetMedicalHistoryDetailResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/medical/prescription": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Upsert Medical Prescription",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Patient Management"
+                ],
+                "summary": "Upsert Medical Prescription",
+                "parameters": [
+                    {
+                        "description": "Upsert medical prescription Request",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/patient.UpsertMedicalPrescriptionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiEmptyResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/medical/surgery": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Upsert Medical Surgery",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Patient Management"
+                ],
+                "summary": "Upsert Medical Surgery",
+                "parameters": [
+                    {
+                        "description": "Upsert medical surgery Request",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/patient.UpsertMedicalSurgeryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiEmptyResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/medical/treatment": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Upsert Medical Treatment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Patient Management"
+                ],
+                "summary": "Upsert Medical Treatment",
+                "parameters": [
+                    {
+                        "description": "Upsert medical treatment Request",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/patient.UpsertMedicalTreatmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiEmptyResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/medication/list-medication": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "List Medication",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Medication Management"
+                ],
+                "summary": "List Medication",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "name",
+                            "created_at"
+                        ],
+                        "type": "string",
+                        "description": "Sort field. Default to name,asc",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Ignore pagination and return all data",
+                        "name": "paging_ignored",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by name",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/patientmodel.ListMedicationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/medication/upsert-medication": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Upsert Medication",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SA - Medication Management"
+                ],
+                "summary": "Upsert Medication",
+                "parameters": [
+                    {
+                        "description": "Upsert medication Request",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/patient.UpsertMedicationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiEmptyResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/basemodel.ApiError"
+                        }
+                    }
+                }
+            }
+        },
         "/patient/upsert-patient": {
             "post": {
                 "security": [
@@ -682,6 +1306,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.CreateDepartmentRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
                     "type": "string"
                 }
             }
@@ -974,69 +1606,220 @@ const docTemplate = `{
                 }
             }
         },
-        "patient.InpatientDetail": {
+        "patient.MedicalHistory": {
             "type": "object",
             "properties": {
-                "admission_date": {
+                "created_at": {
                     "type": "integer"
+                },
+                "created_by": {
+                    "$ref": "#/definitions/patient.User"
                 },
                 "diagnosis": {
                     "type": "string"
                 },
-                "discharge_date": {
-                    "type": "integer"
-                },
-                "doctor_id": {
+                "doctor_notes": {
                     "type": "string"
+                },
+                "has_prescription": {
+                    "type": "boolean"
+                },
+                "has_surgery": {
+                    "type": "boolean"
+                },
+                "has_treatment": {
+                    "type": "boolean"
                 },
                 "id": {
                     "type": "string"
                 },
-                "inpatient_id": {
-                    "type": "string"
-                },
-                "invoice": {
-                    "$ref": "#/definitions/patient.Invoice"
-                },
-                "nurse_id": {
-                    "type": "string"
-                },
-                "sickroom": {
-                    "type": "string"
-                }
-            }
-        },
-        "patient.Invoice": {
-            "type": "object",
-            "properties": {
-                "due_date": {
+                "medical_end_date": {
                     "type": "integer"
                 },
-                "id": {
+                "patient_id": {
                     "type": "string"
                 },
-                "invoice_date": {
-                    "type": "integer"
+                "reason": {
+                    "type": "string"
                 },
-                "total_amount": {
+                "total_fee": {
                     "type": "number"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "updated_by": {
+                    "$ref": "#/definitions/patient.User"
                 }
             }
         },
-        "patient.OutpatientDetail": {
+        "patient.MedicalMedication": {
             "type": "object",
             "properties": {
-                "doctor_id": {
+                "id": {
                     "type": "string"
+                },
+                "medication": {
+                    "$ref": "#/definitions/patient.Medication"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "patient.MedicalPrescription": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "created_by": {
+                    "$ref": "#/definitions/patient.User"
+                },
+                "fee": {
+                    "type": "number"
                 },
                 "id": {
                     "type": "string"
                 },
-                "invoice": {
-                    "$ref": "#/definitions/patient.Invoice"
-                },
-                "outpatient_id": {
+                "medical_history_id": {
                     "type": "string"
+                },
+                "medications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/patient.MedicalMedication"
+                    }
+                },
+                "prescription_date": {
+                    "type": "integer"
+                }
+            }
+        },
+        "patient.MedicalSurgery": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "created_by": {
+                    "$ref": "#/definitions/patient.User"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "integer"
+                },
+                "fee": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "main_doctor_id": {
+                    "type": "string"
+                },
+                "medical_history_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "integer"
+                },
+                "support_doctor_ids": {
+                    "description": "List of doctor ids, separated by comma",
+                    "type": "string"
+                },
+                "support_nurse_ids": {
+                    "description": "List of nurse ids, separated by comma",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "updated_by": {
+                    "$ref": "#/definitions/patient.User"
+                }
+            }
+        },
+        "patient.MedicalTreatment": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "created_by": {
+                    "$ref": "#/definitions/patient.User"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "integer"
+                },
+                "fee": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "main_doctor_id": {
+                    "type": "string"
+                },
+                "medical_history_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "integer"
+                },
+                "support_doctor_ids": {
+                    "description": "List of doctor ids, separated by comma",
+                    "type": "string"
+                },
+                "support_nurse_ids": {
+                    "description": "List of nurse ids, separated by comma",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "updated_by": {
+                    "$ref": "#/definitions/patient.User"
+                }
+            }
+        },
+        "patient.Medication": {
+            "type": "object",
+            "properties": {
+                "effects": {
+                    "type": "string"
+                },
+                "expired_date": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         },
@@ -1045,6 +1828,12 @@ const docTemplate = `{
             "properties": {
                 "address": {
                     "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "created_by": {
+                    "$ref": "#/definitions/patient.User"
                 },
                 "date_of_birth": {
                     "type": "integer"
@@ -1063,20 +1852,163 @@ const docTemplate = `{
                 },
                 "phone_number": {
                     "type": "string"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "updated_by": {
+                    "$ref": "#/definitions/patient.User"
                 }
             }
         },
-        "patient.PatientDetail": {
+        "patient.PrescriptionMedication": {
             "type": "object",
             "properties": {
-                "inpatient_detail": {
-                    "$ref": "#/definitions/patient.InpatientDetail"
+                "medication_id": {
+                    "type": "string"
                 },
-                "outpatient_detail": {
-                    "$ref": "#/definitions/patient.OutpatientDetail"
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "patient.UpsertMedicalPrescriptionRequest": {
+            "type": "object",
+            "properties": {
+                "medical_history_id": {
+                    "type": "string"
                 },
-                "patient": {
-                    "$ref": "#/definitions/patient.Patient"
+                "medications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/patient.PrescriptionMedication"
+                    }
+                }
+            }
+        },
+        "patient.UpsertMedicalRecordRequest": {
+            "type": "object",
+            "properties": {
+                "diagnosis": {
+                    "type": "string"
+                },
+                "doctor_notes": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "medical_end_date": {
+                    "type": "integer"
+                },
+                "patient_id": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                }
+            }
+        },
+        "patient.UpsertMedicalSurgeryRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "integer"
+                },
+                "fee": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "main_doctor_id": {
+                    "type": "string"
+                },
+                "medical_history_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "integer"
+                },
+                "support_doctor_ids": {
+                    "description": "List of doctor ids, separated by comma",
+                    "type": "string"
+                },
+                "support_nurse_ids": {
+                    "description": "List of nurse ids, separated by comma",
+                    "type": "string"
+                }
+            }
+        },
+        "patient.UpsertMedicalTreatmentRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "integer"
+                },
+                "fee": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "main_doctor_id": {
+                    "type": "string"
+                },
+                "medical_history_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "integer"
+                },
+                "support_doctor_ids": {
+                    "description": "List of doctor ids, separated by comma",
+                    "type": "string"
+                },
+                "support_nurse_ids": {
+                    "description": "List of nurse ids, separated by comma",
+                    "type": "string"
+                }
+            }
+        },
+        "patient.UpsertMedicationRequest": {
+            "type": "object",
+            "properties": {
+                "effects": {
+                    "type": "string"
+                },
+                "expired_date": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         },
@@ -1101,8 +2033,79 @@ const docTemplate = `{
                 "last_name": {
                     "type": "string"
                 },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "patient.User": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
                 "phone_number": {
                     "type": "string"
+                }
+            }
+        },
+        "patientmodel.GetMedicalHistoryDetailResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {
+                    "$ref": "#/definitions/patientmodel.GetMedicalHistoryDetailResponseData"
+                }
+            }
+        },
+        "patientmodel.GetMedicalHistoryDetailResponseData": {
+            "type": "object",
+            "properties": {
+                "medical_history": {
+                    "$ref": "#/definitions/patient.MedicalHistory"
+                },
+                "medical_prescriptions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/patient.MedicalPrescription"
+                    }
+                },
+                "medical_surgeries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/patient.MedicalSurgery"
+                    }
+                },
+                "medical_treatments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/patient.MedicalTreatment"
+                    }
+                }
+            }
+        },
+        "patientmodel.GetMedicalHistoryResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "medical_history": {
+                    "$ref": "#/definitions/patientmodel.MedicalHistoryData"
                 }
             }
         },
@@ -1112,8 +2115,53 @@ const docTemplate = `{
                 "code": {
                     "type": "string"
                 },
-                "patientDetail": {
-                    "$ref": "#/definitions/patient.PatientDetail"
+                "patient": {
+                    "$ref": "#/definitions/patient.Patient"
+                }
+            }
+        },
+        "patientmodel.ListMedicationResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {
+                    "$ref": "#/definitions/patientmodel.ListMedicationResponseData"
+                }
+            }
+        },
+        "patientmodel.ListMedicationResponseData": {
+            "type": "object",
+            "properties": {
+                "hasNext": {
+                    "type": "boolean"
+                },
+                "hasPrevious": {
+                    "type": "boolean"
+                },
+                "medications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/patient.Medication"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "totalElements": {
+                    "description": "Num items in all pages",
+                    "type": "integer"
+                },
+                "totalItems": {
+                    "description": "Num items in current page",
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
                 }
             }
         },
@@ -1143,8 +2191,42 @@ const docTemplate = `{
                 "patients": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/patient.PatientDetail"
+                        "$ref": "#/definitions/patient.Patient"
                     }
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "totalElements": {
+                    "description": "Num items in all pages",
+                    "type": "integer"
+                },
+                "totalItems": {
+                    "description": "Num items in current page",
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "patientmodel.MedicalHistoryData": {
+            "type": "object",
+            "properties": {
+                "hasNext": {
+                    "type": "boolean"
+                },
+                "hasPrevious": {
+                    "type": "boolean"
+                },
+                "medical_histories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/patient.MedicalHistory"
+                    }
+                },
+                "page": {
+                    "type": "integer"
                 },
                 "size": {
                     "type": "integer"

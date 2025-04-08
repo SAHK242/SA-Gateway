@@ -14,4 +14,5 @@ type GrpcProps struct {
 
 var Module = fx.Provide(
 	NewPatientGrpcClient,
+	NewMedicationGrpcClient,
 )

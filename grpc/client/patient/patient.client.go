@@ -47,3 +47,57 @@ func (c *PatientGrpcClient) ListPatient(req *patient.ListPatientRequest, md meta
 
 	return c.client.ListPatient(ctx, req, opts...)
 }
+
+func (c *PatientGrpcClient) UpsertMedicalRecord(req *patient.UpsertMedicalRecordRequest, md metadata.MD, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
+	return c.client.UpsertMedicalRecord(ctx, req, opts...)
+}
+
+func (c *PatientGrpcClient) UpsertMedicalTreatment(req *patient.UpsertMedicalTreatmentRequest, md metadata.MD, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
+	return c.client.UpsertMedicalTreatment(ctx, req, opts...)
+}
+
+func (c *PatientGrpcClient) UpsertMedicalSurgery(req *patient.UpsertMedicalSurgeryRequest, md metadata.MD, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
+	return c.client.UpsertMedicalSurgery(ctx, req, opts...)
+}
+
+func (c *PatientGrpcClient) UpsertMedicalPrescription(req *patient.UpsertMedicalPrescriptionRequest, md metadata.MD, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
+	return c.client.UpsertMedicalPrescription(ctx, req, opts...)
+}
+
+func (c *PatientGrpcClient) GetMedicalHistory(req *patient.GetMedicalHistoryRequest, md metadata.MD, opts ...grpc.CallOption) (*patient.GetMedicalHistoryResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
+	return c.client.GetMedicalHistory(ctx, req, opts...)
+}
+
+func (c *PatientGrpcClient) GetMedicalHistoryDetail(req *gcommon.IdRequest, md metadata.MD, opts ...grpc.CallOption) (*patient.GetMedicalHistoryDetailResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
+	return c.client.GetMedicalHistoryDetail(ctx, req, opts...)
+}

@@ -20,9 +20,15 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	PatientService_GetPatient_FullMethodName    = "/patient.PatientService/GetPatient"
-	PatientService_ListPatient_FullMethodName   = "/patient.PatientService/ListPatient"
-	PatientService_UpsertPatient_FullMethodName = "/patient.PatientService/UpsertPatient"
+	PatientService_GetPatient_FullMethodName                = "/patient.PatientService/GetPatient"
+	PatientService_ListPatient_FullMethodName               = "/patient.PatientService/ListPatient"
+	PatientService_UpsertPatient_FullMethodName             = "/patient.PatientService/UpsertPatient"
+	PatientService_UpsertMedicalRecord_FullMethodName       = "/patient.PatientService/UpsertMedicalRecord"
+	PatientService_UpsertMedicalTreatment_FullMethodName    = "/patient.PatientService/UpsertMedicalTreatment"
+	PatientService_UpsertMedicalSurgery_FullMethodName      = "/patient.PatientService/UpsertMedicalSurgery"
+	PatientService_UpsertMedicalPrescription_FullMethodName = "/patient.PatientService/UpsertMedicalPrescription"
+	PatientService_GetMedicalHistory_FullMethodName         = "/patient.PatientService/GetMedicalHistory"
+	PatientService_GetMedicalHistoryDetail_FullMethodName   = "/patient.PatientService/GetMedicalHistoryDetail"
 )
 
 // PatientServiceClient is the client API for PatientService service.
@@ -32,6 +38,12 @@ type PatientServiceClient interface {
 	GetPatient(ctx context.Context, in *gcommon.IdRequest, opts ...grpc.CallOption) (*GetPatientResponse, error)
 	ListPatient(ctx context.Context, in *ListPatientRequest, opts ...grpc.CallOption) (*ListPatientResponse, error)
 	UpsertPatient(ctx context.Context, in *UpsertPatientRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error)
+	UpsertMedicalRecord(ctx context.Context, in *UpsertMedicalRecordRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error)
+	UpsertMedicalTreatment(ctx context.Context, in *UpsertMedicalTreatmentRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error)
+	UpsertMedicalSurgery(ctx context.Context, in *UpsertMedicalSurgeryRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error)
+	UpsertMedicalPrescription(ctx context.Context, in *UpsertMedicalPrescriptionRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error)
+	GetMedicalHistory(ctx context.Context, in *GetMedicalHistoryRequest, opts ...grpc.CallOption) (*GetMedicalHistoryResponse, error)
+	GetMedicalHistoryDetail(ctx context.Context, in *gcommon.IdRequest, opts ...grpc.CallOption) (*GetMedicalHistoryDetailResponse, error)
 }
 
 type patientServiceClient struct {
@@ -72,6 +84,66 @@ func (c *patientServiceClient) UpsertPatient(ctx context.Context, in *UpsertPati
 	return out, nil
 }
 
+func (c *patientServiceClient) UpsertMedicalRecord(ctx context.Context, in *UpsertMedicalRecordRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(gcommon.EmptyResponse)
+	err := c.cc.Invoke(ctx, PatientService_UpsertMedicalRecord_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *patientServiceClient) UpsertMedicalTreatment(ctx context.Context, in *UpsertMedicalTreatmentRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(gcommon.EmptyResponse)
+	err := c.cc.Invoke(ctx, PatientService_UpsertMedicalTreatment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *patientServiceClient) UpsertMedicalSurgery(ctx context.Context, in *UpsertMedicalSurgeryRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(gcommon.EmptyResponse)
+	err := c.cc.Invoke(ctx, PatientService_UpsertMedicalSurgery_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *patientServiceClient) UpsertMedicalPrescription(ctx context.Context, in *UpsertMedicalPrescriptionRequest, opts ...grpc.CallOption) (*gcommon.EmptyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(gcommon.EmptyResponse)
+	err := c.cc.Invoke(ctx, PatientService_UpsertMedicalPrescription_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *patientServiceClient) GetMedicalHistory(ctx context.Context, in *GetMedicalHistoryRequest, opts ...grpc.CallOption) (*GetMedicalHistoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMedicalHistoryResponse)
+	err := c.cc.Invoke(ctx, PatientService_GetMedicalHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *patientServiceClient) GetMedicalHistoryDetail(ctx context.Context, in *gcommon.IdRequest, opts ...grpc.CallOption) (*GetMedicalHistoryDetailResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMedicalHistoryDetailResponse)
+	err := c.cc.Invoke(ctx, PatientService_GetMedicalHistoryDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PatientServiceServer is the server API for PatientService service.
 // All implementations must embed UnimplementedPatientServiceServer
 // for forward compatibility
@@ -79,6 +151,12 @@ type PatientServiceServer interface {
 	GetPatient(context.Context, *gcommon.IdRequest) (*GetPatientResponse, error)
 	ListPatient(context.Context, *ListPatientRequest) (*ListPatientResponse, error)
 	UpsertPatient(context.Context, *UpsertPatientRequest) (*gcommon.EmptyResponse, error)
+	UpsertMedicalRecord(context.Context, *UpsertMedicalRecordRequest) (*gcommon.EmptyResponse, error)
+	UpsertMedicalTreatment(context.Context, *UpsertMedicalTreatmentRequest) (*gcommon.EmptyResponse, error)
+	UpsertMedicalSurgery(context.Context, *UpsertMedicalSurgeryRequest) (*gcommon.EmptyResponse, error)
+	UpsertMedicalPrescription(context.Context, *UpsertMedicalPrescriptionRequest) (*gcommon.EmptyResponse, error)
+	GetMedicalHistory(context.Context, *GetMedicalHistoryRequest) (*GetMedicalHistoryResponse, error)
+	GetMedicalHistoryDetail(context.Context, *gcommon.IdRequest) (*GetMedicalHistoryDetailResponse, error)
 	mustEmbedUnimplementedPatientServiceServer()
 }
 
@@ -94,6 +172,24 @@ func (UnimplementedPatientServiceServer) ListPatient(context.Context, *ListPatie
 }
 func (UnimplementedPatientServiceServer) UpsertPatient(context.Context, *UpsertPatientRequest) (*gcommon.EmptyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpsertPatient not implemented")
+}
+func (UnimplementedPatientServiceServer) UpsertMedicalRecord(context.Context, *UpsertMedicalRecordRequest) (*gcommon.EmptyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertMedicalRecord not implemented")
+}
+func (UnimplementedPatientServiceServer) UpsertMedicalTreatment(context.Context, *UpsertMedicalTreatmentRequest) (*gcommon.EmptyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertMedicalTreatment not implemented")
+}
+func (UnimplementedPatientServiceServer) UpsertMedicalSurgery(context.Context, *UpsertMedicalSurgeryRequest) (*gcommon.EmptyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertMedicalSurgery not implemented")
+}
+func (UnimplementedPatientServiceServer) UpsertMedicalPrescription(context.Context, *UpsertMedicalPrescriptionRequest) (*gcommon.EmptyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertMedicalPrescription not implemented")
+}
+func (UnimplementedPatientServiceServer) GetMedicalHistory(context.Context, *GetMedicalHistoryRequest) (*GetMedicalHistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMedicalHistory not implemented")
+}
+func (UnimplementedPatientServiceServer) GetMedicalHistoryDetail(context.Context, *gcommon.IdRequest) (*GetMedicalHistoryDetailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMedicalHistoryDetail not implemented")
 }
 func (UnimplementedPatientServiceServer) mustEmbedUnimplementedPatientServiceServer() {}
 
@@ -162,6 +258,114 @@ func _PatientService_UpsertPatient_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PatientService_UpsertMedicalRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertMedicalRecordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PatientServiceServer).UpsertMedicalRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PatientService_UpsertMedicalRecord_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PatientServiceServer).UpsertMedicalRecord(ctx, req.(*UpsertMedicalRecordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PatientService_UpsertMedicalTreatment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertMedicalTreatmentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PatientServiceServer).UpsertMedicalTreatment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PatientService_UpsertMedicalTreatment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PatientServiceServer).UpsertMedicalTreatment(ctx, req.(*UpsertMedicalTreatmentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PatientService_UpsertMedicalSurgery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertMedicalSurgeryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PatientServiceServer).UpsertMedicalSurgery(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PatientService_UpsertMedicalSurgery_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PatientServiceServer).UpsertMedicalSurgery(ctx, req.(*UpsertMedicalSurgeryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PatientService_UpsertMedicalPrescription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertMedicalPrescriptionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PatientServiceServer).UpsertMedicalPrescription(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PatientService_UpsertMedicalPrescription_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PatientServiceServer).UpsertMedicalPrescription(ctx, req.(*UpsertMedicalPrescriptionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PatientService_GetMedicalHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMedicalHistoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PatientServiceServer).GetMedicalHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PatientService_GetMedicalHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PatientServiceServer).GetMedicalHistory(ctx, req.(*GetMedicalHistoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PatientService_GetMedicalHistoryDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(gcommon.IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PatientServiceServer).GetMedicalHistoryDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PatientService_GetMedicalHistoryDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PatientServiceServer).GetMedicalHistoryDetail(ctx, req.(*gcommon.IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PatientService_ServiceDesc is the grpc.ServiceDesc for PatientService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -180,6 +384,30 @@ var PatientService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpsertPatient",
 			Handler:    _PatientService_UpsertPatient_Handler,
+		},
+		{
+			MethodName: "UpsertMedicalRecord",
+			Handler:    _PatientService_UpsertMedicalRecord_Handler,
+		},
+		{
+			MethodName: "UpsertMedicalTreatment",
+			Handler:    _PatientService_UpsertMedicalTreatment_Handler,
+		},
+		{
+			MethodName: "UpsertMedicalSurgery",
+			Handler:    _PatientService_UpsertMedicalSurgery_Handler,
+		},
+		{
+			MethodName: "UpsertMedicalPrescription",
+			Handler:    _PatientService_UpsertMedicalPrescription_Handler,
+		},
+		{
+			MethodName: "GetMedicalHistory",
+			Handler:    _PatientService_GetMedicalHistory_Handler,
+		},
+		{
+			MethodName: "GetMedicalHistoryDetail",
+			Handler:    _PatientService_GetMedicalHistoryDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
