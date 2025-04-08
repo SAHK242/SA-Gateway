@@ -6,10 +6,11 @@ import (
 )
 
 type LoginResponse struct {
-	Code     string        `json:"code"`
-	Token    string        `json:"token"`
-	User     *auth.User    `json:"user"`
-	NextStep auth.NextStep `json:"next_step"`
+	Code        string           `json:"code"`
+	Token       string           `json:"token"`
+	User        *auth.User       `json:"user"`
+	NextStep    auth.NextStep    `json:"next_step"`
+	AccountType auth.AccountType `json:"account_type"`
 }
 
 type GenerateLoginSecretRequest struct {

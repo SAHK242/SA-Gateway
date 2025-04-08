@@ -86,10 +86,11 @@ func (c *AuthController) Login(ctx *fiber.Ctx) error {
 	}
 
 	return apiutil.AsServerResponse(ctx, &authmodel.LoginResponse{
-		Code:     apiutil.AsSuccessCode(),
-		Token:    res.Token,
-		User:     res.User,
-		NextStep: res.NextStep,
+		Code:        apiutil.AsSuccessCode(),
+		Token:       res.Token,
+		User:        res.User,
+		NextStep:    res.NextStep,
+		AccountType: res.AccountType,
 	})
 }
 
